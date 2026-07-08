@@ -86,11 +86,16 @@
 </template>
 
 <script>
-    const existingSteps = @json(collect($requisition->approval_steps ?? [])->map(fn($s) => [
-        'role_label' => $s->role_label,
-        'approver_name' => $s->approver_name,
-        'required' => (bool) $s->required,
-    ]));
+    const existingSteps = {{ json_encode(
+        collect($requisition->approval_steps ?? [])
+            ->map(fn($s) => [
+                'role_label' => $s->role_label,
+                'approver_name' => $s->approver_name,
+                'required' => (bool) $s->required,
+            ])
+            ->values()
+            ->all()
+    ) }};
 
     const defaultSteps = [
         { role_label: 'Manager Approval', approver_name: 'Marketing Manager', required: true },
